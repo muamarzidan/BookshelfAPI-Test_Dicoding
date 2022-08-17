@@ -129,7 +129,7 @@ const ubahBukuWibu = (request, h) => {
         });
         response.code(400);
         return response;
-    } else if (manggaid === undefined) {
+    } else if (!manggaid) {
         const response = h.response({
             status: 'gagal',
             message: 'Gagal memperbarui mangga. Manggaid tidak ditemukan',
@@ -142,49 +142,41 @@ const ubahBukuWibu = (request, h) => {
             name,year,author,summary,publisher,pageCount,readPage,reading,createdAt,updatedAt,
         };
         const response = h.response ({
-            status: 'success',
-            message: 'Note has been updated',
+            status: 'sukses',
+            message: 'Mangga berhasil diperbaharui',
         });
         response.code(200);
         return response;
     }
-    const responses = h.response ({
-        status: 'Failed',
-        message: 'Note cannot be found',
+}
+
+const hapusBukuWibu = (request, h) => {
+    const { manggaid } = request.params;
+    const ifBerhasil = mangga.findIndex((manggan) => manggan.manggaid === manggaid);
+    if (!manggaid) {
+        const response = h.response({
+            status: 'gagal',
+            message: 'Gagal menghapus mangga. Manggaid tidak ditemukan',
+        });
+        response.code(404);
+        return response;
+    }
+    else if (ifBerhasil !== -1) {
+        mangga.splice(ifBerhasil, 1);
+        const response = h.response({
+            status: 'sukses',
+            message: 'Mangga berhasil dihapus',
+        });
+        response.code(200);
+        return response;
+    }
+    const response = h.response ({
+        status: 'gagal',
+        message: 'Mangga gagal dihapus, Manggaid tidak ditemukan',
     })
-    responses.code(404);
-    return responses;
-    // const ifBerhasil = mangga.filter((manggan) => manggan.manggaid === manggaid)[0];
-    // if (ifBerhasil !== undefined) {
-    //     ifBerhasil.name = name;
-    //     ifBerhasil.year = year;
-    //     ifBerhasil.author = author;
-    //     ifBerhasil.summary = summary;
-    //     ifBerhasil.publisher = publisher;
-    //     ifBerhasil.pageCount = pageCount;
-    //     ifBerhasil.readPage = readPage;
-    //     ifBerhasil.reading = reading;
-    //     ifBerhasil.updatedAt = updatedAt;
-    //     if (ifBerhasil.readPage >= ifBerhasil.pageCount) {
-    //         ifBerhasil.finished = true;
-    //     } else {
-    //         ifBerhasil.finished = false;
-    //     }
-    //     return {
-    //         status: 'sukses',
-    //         data: {
-    //             mangga: ifBerhasil
-    //         },
-    //     };
-    // } else {
-    //     const response = h.response({
-    //         status: 'gagal',
-    //         message: 'Mangga tidak ditemukan',
-    //     });
-    //     response.code(404);
-    //     return response;
-    // }
+    response.code(500);
+    return response;
 }
 
 
-module.exports = { tambahBukuWibu, lihatsemuaBukuWibu, lihatBukuWibu, ubahBukuWibu };
+module.exports = { tambahBukuWibu, lihatsemuaBukuWibu, lihatBukuWibu, ubahBukuWibu, hapusBukuWibu };

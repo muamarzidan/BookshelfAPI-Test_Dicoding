@@ -1,4 +1,4 @@
-const { tambahBukuWibu, lihatsemuaBukuWibu, lihatBukuWibu, ubahBukuWibu } = require('./handler');
+const { tambahBukuWibu, lihatsemuaBukuWibu, lihatBukuWibu, ubahBukuWibu, hapusBukuWibu   } = require('./handler');
 
 const routes = [
 
@@ -22,11 +22,11 @@ const routes = [
         path: '/mangga/{manggaid}',
         handler: ubahBukuWibu,
     },
-    // {
-    //     method: 'DELETE',
-    //     path: '/mangga/{manggaid}',
-    //     // handler: lihatBukuWibu,
-    // }
+    {
+        method: 'DELETE',
+        path: '/mangga/{manggaid}',
+        handler: hapusBukuWibu,
+    }
 ]
 
 module.exports = routes;
