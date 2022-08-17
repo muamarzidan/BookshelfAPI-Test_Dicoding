@@ -1,4 +1,4 @@
-const { tambahBukuWibu } = require('./handler');
+const { tambahBukuWibu, lihatsemuaBukuWibu, lihatBukuWibu } = require('./handler');
 
 const routes = [
 
@@ -7,16 +7,16 @@ const routes = [
         path: '/mangga',
         handler: tambahBukuWibu,
     },
-    // {
-    //     method: 'GET',
-    //     path: '/mangga',
-    //     //, handler: lihatBukuWibu,
-    // },
-    // {
-    //     method: 'GET',
-    //     path: '/mangga/{manggaid}',
-    //     // handler: lihatBukuWibu,
-    // },
+    {
+        method: 'GET',
+        path: '/mangga',
+        handler: lihatsemuaBukuWibu,
+    },
+    {
+        method: 'GET',
+        path: '/mangga/{manggaid}',
+        handler: lihatBukuWibu,
+    },
     // {
     //     method: 'PUT',
     //     path: '/mangga/{manggaid}',
