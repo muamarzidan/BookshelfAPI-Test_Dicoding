@@ -1,3 +1,3 @@
-const mangga = [];
+const buku = [];
 
-module.exports = mangga;
+module.exports = buku;

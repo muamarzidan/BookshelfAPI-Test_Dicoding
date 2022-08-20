@@ -1,32 +1,32 @@
-const { tambahBukuWibu, lihatsemuaBukuWibu, lihatBukuWibu, ubahBukuWibu, hapusBukuWibu   } = require('./handler');
+const { tambahBukuWibu, lihatsemuaBukuWibu, lihatBukuidWibu, ubahBukuWibu, hapusBukuWibu} = require('../api_handler/handler');
 
 const routes = [
 
     {
         method: 'POST',
-        path: '/mangga',
+        path: '/boook',
         handler: tambahBukuWibu,
     },
     {
         method: 'GET',
-        path: '/mangga',
+        path: '/boook',
         handler: lihatsemuaBukuWibu,
     },
     {
         method: 'GET',
-        path: '/mangga/{manggaid}',
-        handler: lihatBukuWibu,
+        path: '/boook/{bukuid}',
+        handler: lihatBukuidWibu,
     },
     {
         method: 'PUT',
-        path: '/mangga/{manggaid}',
+        path: '/boook/{bukuid}',
         handler: ubahBukuWibu,
     },
     {
         method: 'DELETE',
-        path: '/mangga/{manggaid}',
+        path: '/boook/{bukuid}',
         handler: hapusBukuWibu,
-    }
+    },
 ]
 
 module.exports = routes;
