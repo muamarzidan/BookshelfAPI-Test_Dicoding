@@ -4,27 +4,27 @@ const routes = [
 
     {
         method: 'POST',
-        path: '/boook',
+        path: '/books',
         handler: tambahBukuWibu,
     },
     {
         method: 'GET',
-        path: '/boook',
+        path: '/books',
         handler: lihatsemuaBukuWibu,
     },
     {
         method: 'GET',
-        path: '/boook/{bukuid}',
+        path: '/books/{bukuid}',
         handler: lihatBukuidWibu,
     },
     {
         method: 'PUT',
-        path: '/boook/{bukuid}',
+        path: '/books/{bukuid}',
         handler: ubahBukuWibu,
     },
     {
         method: 'DELETE',
-        path: '/boook/{bukuid}',
+        path: '/books/{bukuid}',
         handler: hapusBukuWibu,
     },
 ]

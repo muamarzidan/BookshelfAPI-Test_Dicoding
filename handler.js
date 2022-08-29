@@ -1,5 +1,5 @@
 const { nanoid } = require('nanoid');
-const buku = require('../mangga');
+const bukuku = require('../buku');
 
 const tambahBukuWibu = (request, h) => {
     const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
@@ -20,14 +20,12 @@ const tambahBukuWibu = (request, h) => {
         return response;
     }
 
-    // buat reading jadi true atau false
-
     const id = nanoid(16);
     const insertedAt = new Date().toISOString();
     const updatedAt = insertedAt;
     const finished = pageCount === readPage ? true : false;
 
-    const newBuku = {
+    const newBook = {
         id,
         name,
         year,
@@ -41,41 +39,40 @@ const tambahBukuWibu = (request, h) => {
         insertedAt,
         updatedAt,
     };
-    buku.push(newBuku);
-    const ifBerhasil = buku.filter((buk) => buk.id === id).length > 0;
+    bukuku.push(newBook);
+    const ifBerhasil = bukuku.filter((bukubuku) => bukubuku.id === id).length > 0;
 
-   if (ifBerhasil) {
-        const response = h.response({
+   if (!ifBerhasil) {
+    const response = h.response({
+        status: "error",
+        message: 'Buku gagal ditambahkan',
+    });
+    response.code(500);
+    return response;``
+    }
+    const response = h.response({
             status: "success",
             message: 'Buku berhasil ditambahkan',
             data: {
                 bookId: id,
             }
-        });
+    });
         response.code(201);
         return response;
-    } else {
-        const response = h.response({
-            status: "error",
-            message: 'Buku gagal ditambahkan',
-        });
-        response.code(500);
-        return response;
-    }
 };
+
 
 const lihatsemuaBukuWibu = (request, h) => {
     const {name, reading, finished} = request.query;
     if (name) {
-        const namebuku = buku.filter((bok) => bok.name.toUpperCase().includes(name.toUpperCase()));
-        console.log(namebuku);
+        const nameBook = bukuku.filter((bukubuku) => bukubuku.name.toUpperCase().includes(name.toUpperCase()));
         const response = h.response({
             status: 'success',
                 data: {
-                books: namebuku.map((bok) => ({
-                    bukuid: bok.id,
-                    name: bok.name,
-                    publisher: bok.publisher,
+                books: nameBook.map((bukubuku) => ({
+                    id: bukubuku.id,
+                    name: bukubuku.name,
+                    publisher: bukubuku.publisher,
                 }))
             } 
         })
@@ -83,14 +80,14 @@ const lihatsemuaBukuWibu = (request, h) => {
         return response;
     }
      if (reading) {
-        const readbuku = buku.filter((bok) => Number(bok.reading) === Number(reading));
+        const readBook = bukuku.filter((bukubuku) => Number(bukubuku.reading) === Number(reading));
         const response = h.response({
             status: 'success',
             data: {
-                books: readbuku.map((bok) => ({
-                    bukuid: bok.id,
-                    name: bok.name,
-                    publisher: bok.publisher,
+                books: readBook.map((bukubuku) => ({
+                    id: bukubuku.id,
+                    name: bukubuku.name,
+                    publisher: bukubuku.publisher,
                 }))
             }
         })
@@ -98,14 +95,14 @@ const lihatsemuaBukuWibu = (request, h) => {
         return response;
     }
     else if (finished) {
-        const finishbuku = buku.filter((bok) => Number(bok.finished) === Number(finished));
+        const finishBook = bukuku.filter((bukubuku) => Number(bukubuku.finished) === Number(finished));
         const response = h.response({
             status: 'success',
             data: {
-                books: finishbuku.map((bok) => ({
-                    bukuid: bok.id,
-                    name: bok.name,
-                    publisher: bok.publisher,
+                books: finishBook.map((bukubuku) => ({
+                    id: bukubuku.id,
+                    name: bukubuku.name,
+                    publisher: bukubuku.publisher,
                 }))
             }
         })
@@ -116,14 +113,13 @@ const lihatsemuaBukuWibu = (request, h) => {
         const response = h.response ({
             status: 'success',
             data: {
-                books: buku.map((bok) => ({
-                    bukuid: bok.id,
-                    name: bok.name,
-                    publisher: bok.publisher,
+                books: bukuku.map((bukubuku) => ({
+                    id: bukubuku.id,
+                    name: bukubuku.name,
+                    publisher: bukubuku.publisher,
                 }))
             }
         })
-        response.code(200);
         return response;
     }
 };
@@ -131,7 +127,7 @@ const lihatsemuaBukuWibu = (request, h) => {
 const lihatBukuidWibu = (request, h) => {
     const { bukuid } = request.params;
 
-    const ifBerhasil = buku.filter((bok) => bok.id === bukuid)[0];
+    const ifBerhasil = bukuku.filter((bukubuku) => bukubuku.id === bukuid)[0];
 
     if (!ifBerhasil) {
         const response = h.response({
@@ -147,13 +143,14 @@ const lihatBukuidWibu = (request, h) => {
                 book: ifBerhasil,            
             }
         });
-        response.code(201);
+        response.code(200);
         return response;
     } 
 };
 
 const ubahBukuWibu = (request, h) => {
-    const {     bukuid } = request.params;
+    const { bukuid } = request.params;
+    const ifBerhasil = bukuku.findIndex((bukubuku) => bukubuku.id === bukuid);
     const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
 
     if (!name) {
@@ -163,28 +160,24 @@ const ubahBukuWibu = (request, h) => {
         });
         response.code(400);
         return response;
-    } else if (readPage > pageCount) {
+    } 
+    if (readPage > pageCount) {
         const response = h.response({
             status: 'fail',
             message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
         });
         response.code(400);
         return response;
-    } 
-    const createdAt = new Date().toISOString();  const updatedAt = createdAt;
-    const ifBerhasil = buku.findIndex((bok) => bok.id === bukuid);
+    }  
 
-    if (ifBerhasil.bukuid === undefined) {
-        const response = h.response({
-            status: 'fail',
-            message: 'Gagal memperbarui buku. Id tidak ditemukan',
-        });
-        response.code(404);
-        return response;
-    }else if (ifBerhasil !== -1) {
-        buku[ifBerhasil] = {
-            ...buku[ifBerhasil],
-            name,year,author,summary,publisher,pageCount,readPage,reading,createdAt,updatedAt,
+    const updatedAt = new Date().toISOString();
+
+    
+
+    if (ifBerhasil !== -1) {
+        bukuku[ifBerhasil] = {
+            ...bukuku[ifBerhasil],
+            name,year,author,summary,publisher,pageCount,readPage,reading,updatedAt,
         };
         const response = h.response ({
             status: 'success',
@@ -192,23 +185,24 @@ const ubahBukuWibu = (request, h) => {
         });
         response.code(200);
         return response;
-    } else {
-        const response = h.response ({
+    } else if (ifBerhasil.bukuid === undefined) {
+        const response = h.response({
             status: 'fail',
-            message: 'Gagal memperbarui buku',
+            message: 'Gagal memperbarui buku. Id tidak ditemukan',
         });
-        response.code(500);
+        response.code(404);
         return response;
     }
+    
 };
 
 const hapusBukuWibu = (request, h) => {
     const { bukuid } = request.params;
-    const ifBerhasil = buku.findIndex((bok) => bok.id === bukuid);
+    const ifBerhasil = bukuku.findIndex((bukubuku) => bukubuku.id === bukuid);
     if (ifBerhasil !== -1) {
-        buku.splice(ifBerhasil, 1);
+        bukuku.splice(ifBerhasil, 1);
         const response = h.response({
-            status: 'sukses',
+            status: 'success',
             message: 'Buku berhasil dihapus',
         });
         response.code(200);
